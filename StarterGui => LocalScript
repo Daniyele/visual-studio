@@ -1,0 +1,4 @@
+local player = game.players.localplayer.character
+
+
+player:MoveTo(Vector3.new(0,0,0))
