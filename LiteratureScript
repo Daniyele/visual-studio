@@ -1,0 +1,62 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StartLiteratureGame = ReplicatedStorage:WaitForChild("StartLiteratureGame")
+
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+gui.Name = "LiteratureGameUI"
+gui.Enabled = false
+
+-- GUI elements
+local prompt = Instance.new("TextLabel", gui)
+prompt.Size = UDim2.new(0, 400, 0, 50)
+prompt.Position = UDim2.new(0.5, -200, 0.3, 0)
+prompt.TextScaled = true
+prompt.TextColor3 = Color3.new(1, 1, 1)
+
+local buttons = {}
+local options = {"Chain", "Link", "Bridge", "Book"}
+
+for i, word in ipairs(options) do
+	local button = Instance.new("TextButton", gui)
+	button.Size = UDim2.new(0, 200, 0, 50)
+	button.Position = UDim2.new(0.5, -100, 0.4 + (i * 0.1), 0)
+	button.Text = word
+	button.TextScaled = true
+	table.insert(buttons, button)
+end
+
+local feedback = Instance.new("TextLabel", gui)
+feedback.Size = UDim2.new(0, 400, 0, 40)
+feedback.Position = UDim2.new(0.5, -200, 0.9, 0)
+feedback.TextScaled = true
+feedback.TextColor3 = Color3.fromRGB(255, 255, 0)
+
+-- RemoteEvent trigger
+StartLiteratureGame.OnClientEvent:Connect(function()
+	gui.Enabled = true
+	prompt.Text = "Book → ? → Reaction"
+
+	for _, btn in ipairs(buttons) do
+		btn.MouseButton1Click:Connect(function()
+			if btn.Text == "Chain" then
+				--feedback.Text = "Correct! You earned the 3 of ♦️!"
+				--wait(2)
+				--gui:Destroy()
+				feedback.Text = "Correct! You earned the 3 of ♦️!"
+
+				-- Create card image
+				local cardImage = Instance.new("ImageLabel", gui)
+				cardImage.Size = UDim2.new(0, 200, 0, 300)
+				cardImage.Position = UDim2.new(0.5, -100, 0.2, 0)
+				cardImage.Image = "rbxassetid://14086727073"
+				cardImage.BackgroundTransparency = 1
+
+				wait(3)
+				gui:Destroy()
+			else
+				feedback.Text = "Incorrect! Try again."
+			end
+		end)
+	end
+end)
+
