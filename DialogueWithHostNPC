@@ -1,0 +1,74 @@
+local CutscenePart = game.Workspace.CutscenePart.ProximityPrompt
+
+CutscenePart.Triggered:Connect(function()
+	CutscenePart.Enabled = false
+	script.Parent.Visible = true
+	script.Parent.Text = "Welcome, players, to Howardland—a place where reality bends, and survival is the only rule. You thought today would be just another day on campus, didn’t you? But now, you’re trapped in a game where every building holds a deadly challenge."
+	wait(4)
+	script.Parent.Text = "Your goal? Survive. Complete the games. Collect the cards. And maybe, just maybe, you’ll escape. Each building you enter will test your mind, body, and spirit. Win, and you’ll earn a card. Lose, and well… let’s just say you won’t be graduating anytime soon."
+	wait(3)
+	script.Parent.Text = "But don’t worry—you’re not alone. Survivors and enemies roam these halls. Some will help you. Others… will stop at nothing to see you fail. Choose your allies wisely."
+	wait(2)
+	script.Parent.Text = "The clock is ticking. The games are waiting. And I’ll be watching. Good luck—you’ll need it."
+	wait(2)
+	script.Parent.Visible = false
+	CutscenePart.Enabled = true
+end)
+
+
+
+##HostDialogueScript
+
+local prompt = workspace:WaitForChild("HostNPC"):WaitForChild("Head"):WaitForChild("ProximityPrompt")
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Dialogue lines
+local dialogueLines = {
+	"Welcome, players, to Howardland—a place where reality bends, and survival is the only rule. You thought today would be just another day on campus, didn’t you? But now, you’re trapped in a game where every building holds a deadly challenge. Your goal? Survive. Complete the games. Collect the cards. And maybe, just maybe, you’ll escape.",
+	"Each building you enter will test your mind, body, and spirit. Win, and you’ll earn a card. Lose, and well… let’s just say you won’t be graduating anytime soon.",
+	"But don’t worry—you’re not alone. Survivors and enemies roam these halls. Some will help you. Others… will stop at nothing to see you fail. Choose your allies wisely.",
+	"The clock is ticking. The games are waiting. And I’ll be watching. Good luck—you’ll need it.",
+	"(The Host disappears into the shadows...)"
+}
+
+-- Create UI
+local dialogueGui = Instance.new("ScreenGui", playerGui)
+dialogueGui.Name = "HostDialogueUI"
+dialogueGui.Enabled = false
+
+local textBox = Instance.new("TextLabel", dialogueGui)
+textBox.Size = UDim2.new(0.6, 0, 0.2, 0)
+textBox.Position = UDim2.new(0.2, 0, 0.7, 0)
+textBox.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+textBox.TextScaled = true
+textBox.TextWrapped = true
+textBox.Text = ""
+textBox.Visible = true
+
+-- Typewriter effect
+local function typeText(line)
+	textBox.Text = ""
+	for i = 1, #line do
+		textBox.Text = string.sub(line, 1, i)
+		wait(0.02)
+	end
+end
+
+-- Play dialogue
+local function playDialogue()
+	dialogueGui.Enabled = true
+	for _, line in ipairs(dialogueLines) do
+		typeText(line)
+		wait(3)
+	end
+	dialogueGui.Enabled = false
+end
+
+-- Trigger when prompt activated
+prompt.Triggered:Connect(function()
+	playDialogue()
+	workspace.HostNPC:Destroy()
+end)
+
