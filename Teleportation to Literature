@@ -1,0 +1,16 @@
+Teleports user to Locke Hall 
+
+local part = script.Parent
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StartLiteratureGame = ReplicatedStorage:WaitForChild("StartLiteratureGame")
+
+local destination = workspace:WaitForChild("Spawn_Literature").Position
+
+part.Touched:Connect(function(hit)
+	local player = game.Players:GetPlayerFromCharacter(hit.Parent)
+	if player and player.Character then
+		player.Character:MoveTo(destination + Vector3.new(0, 3, 0))
+		wait(3)
+		StartLiteratureGame:FireClient(player)
+	end
+end)
