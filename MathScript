@@ -1,0 +1,87 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StartMathGameEvent = ReplicatedStorage:WaitForChild("StartMathGame")
+
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local questions = {
+	"What is 2 + 3?",
+	"What is 4 * 5?",
+	"What is 10 - 6?",
+	"What is 12 + 8?",
+	"What is 9 * 3?",
+	"What is 144 / 12?",
+	"What is 25 + 75?",
+	"What is 15 * 7?",
+	"What is 200 - 83?",
+	"What is 23 * 9?",
+}
+local answers = {5, 20, 4, 20, 27, 12, 100, 105, 117, 207}
+
+local function createMathUI()
+	local gui = Instance.new("ScreenGui", playerGui)
+	gui.Name = "MathGameUI"
+
+	local questionLabel = Instance.new("TextLabel", gui)
+	questionLabel.Size = UDim2.new(0, 400, 0, 50)
+	questionLabel.Position = UDim2.new(0.5, -200, 0.3, 0)
+	questionLabel.TextScaled = true
+	questionLabel.TextColor3 = Color3.new(1, 1, 1)
+
+	local inputBox = Instance.new("TextBox", gui)
+	inputBox.Size = UDim2.new(0, 200, 0, 50)
+	inputBox.Position = UDim2.new(0.5, -100, 0.4, 0)
+	inputBox.PlaceholderText = "Enter your answer"
+	inputBox.TextScaled = true
+
+	local submitButton = Instance.new("TextButton", gui)
+	submitButton.Size = UDim2.new(0, 200, 0, 50)
+	submitButton.Position = UDim2.new(0.5, -100, 0.5, 0)
+	submitButton.Text = "Submit"
+	submitButton.TextScaled = true
+
+	local feedback = Instance.new("TextLabel", gui)
+	feedback.Size = UDim2.new(0, 400, 0, 40)
+	feedback.Position = UDim2.new(0.5, -200, 0.6, 0)
+	feedback.TextScaled = true
+	feedback.TextColor3 = Color3.fromRGB(255, 255, 0)
+
+	return gui, questionLabel, inputBox, submitButton, feedback
+end
+
+StartMathGameEvent.OnClientEvent:Connect(function()
+	local gui, questionLabel, inputBox, submitButton, feedback = createMathUI()
+
+	local current = 1
+
+	local function askNext()
+		if current > #questions then
+			questionLabel.Text = "You completed the math game!"
+			inputBox.Visible = false
+			submitButton.Visible = false
+			wait(3)
+			if gui then gui:Destroy() end
+			return
+		end
+
+		questionLabel.Text = questions[current]
+		inputBox.Text = ""
+		feedback.Text = ""
+	end
+
+	submitButton.MouseButton1Click:Connect(function()
+		local input = tonumber(inputBox.Text)
+		if input == answers[current] then
+			feedback.Text = "Correct!"
+			current += 1
+			wait(1)
+			askNext()
+		else
+			feedback.Text = "Wrong! Try again."
+		end
+	end)
+	
+	-- Ask the first question once
+	askNext()
+end)
+
