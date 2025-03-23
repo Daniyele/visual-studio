@@ -1,0 +1,9 @@
+Teleportation to Douglass through the Spawn Doug
+
+script.Parent.Touched:Connect(function(Hit)
+	if Hit and Hit.Parent:WaitForChild("Humanoid") then
+		local Player = game.Players:GetPlayerFromCharacter(Hit.Parent)
+		Player.Character:MoveTo(Vector3.new(778, 19.5, 933))
+	end
+end)
+
